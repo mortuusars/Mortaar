@@ -1,14 +1,10 @@
 {
   "required": true,
-  "package": "io.github.mortuusars.symbolism.mixin",
+  "package": "io.github.mortuusars.seal.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "plugin": "io.github.mortuusars.symbolism.mixin.SymbolismMixinConfigPlugin",
   "client": [
-    "GameRendererMixin",
-    "KeyboardHandlerMixin",
-    "MouseHandlerMixin",
-    "ScreenMixin"
+    "carrying_tooltip.AbstractContainerScreenMixin"
   ],
   "mixins": [
   ],
