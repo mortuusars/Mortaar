@@ -15,10 +15,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.mortuusars.seal.fabric.SealFabric"
+      "io.github.mortuusars.mortaar.fabric.MortaarFabric"
     ],
     "client": [
-      "io.github.mortuusars.seal.fabric.SealFabricClient"
+      "io.github.mortuusars.mortaar.fabric.MortaarFabricClient"
     ]
   },
   "mixins": [

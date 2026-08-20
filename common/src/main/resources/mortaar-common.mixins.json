@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.mortuusars.mortaar.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "carrying_tooltip.AbstractContainerScreenMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
