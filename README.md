@@ -1,5 +1,7 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/mortuusars/resources/main/media/mortaar/main.png" width="225">
+    <img src="common/src/main/resources/icon.png" width="225">
+
+[//]: # (  <img src="https://raw.githubusercontent.com/mortuusars/resources/main/media/mortaar/main.png" width="225">)
   <br>
 </div>
 
