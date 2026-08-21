@@ -349,6 +349,10 @@ public record Color(int a, int r, int g, int b) {
         public static float[] RGBtoHSB(int r, int g, int b) {
             return RGBtoHSB(r, g, b, new float[3]);
         }
+
+        public static float[] RGBtoHSB(Color color) {
+            return RGBtoHSB(color.r, color.g, color.b, new float[3]);
+        }
     }
 
     public record Unbounded(int r, int g, int b, int a) {
