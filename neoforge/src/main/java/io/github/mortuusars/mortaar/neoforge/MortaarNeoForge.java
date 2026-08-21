@@ -16,7 +16,7 @@ public class MortaarNeoForge {
     public MortaarNeoForge(ModContainer container) {
         Mortaar.init();
 
-        container.registerConfig(ModConfig.Type.COMMON, Config.Common.SPEC);
+        container.registerConfig(ModConfig.Type.SERVER, Config.Server.SPEC);
 
         @Nullable IEventBus modEventBus = container.getEventBus();
         Preconditions.checkNotNull(modEventBus);
