@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Sprites {
+public abstract class Sprites {
     public static WidgetSprites normalOnly(ResourceLocation base) {
         return new WidgetSprites(base, base);
     }

@@ -9,7 +9,7 @@ import net.minecraft.core.RegistryAccess;
 
 import java.util.Objects;
 
-public class Minecrft {
+public abstract class Minecrft {
     public static Minecraft get() {
         return Minecraft.getInstance();
     }

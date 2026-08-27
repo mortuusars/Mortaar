@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Tooltips {
+public abstract class Tooltips {
     public static <T> Map<T, Tooltip> createMap(List<T> values, Function<T, Component> convertFunc) {
         Preconditions.checkArgument(!values.isEmpty(), "values list must not be empty.");
         Map<T, Tooltip> map = new HashMap<>();

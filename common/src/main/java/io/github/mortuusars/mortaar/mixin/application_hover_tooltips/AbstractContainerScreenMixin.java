@@ -1,4 +1,4 @@
-package io.github.mortuusars.mortaar.mixin.carrying_tooltip;
+package io.github.mortuusars.mortaar.mixin.application_hover_tooltips;
 
 import io.github.mortuusars.mortaar.client.Minecrft;
 import io.github.mortuusars.mortaar.world.item.ApplicationTargetItem;
@@ -36,7 +36,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     protected abstract List<Component> getTooltipFromContainerItem(ItemStack stack);
 
     /**
-     * Because tooltip is not rendered when carrying an item, we render it manually when {@link ApplicatorItem} or {@link ApplicationTargetItem} needs it.<br>
+     * Because tooltip is not rendered when carrying an item,
+     * we render it manually when {@link ApplicatorItem} or {@link ApplicationTargetItem} needs it.<br>
      * This helps to choose/see the item you're changing.
      */
     @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
@@ -48,12 +49,20 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         ItemStack carried = getMenu().getCarried();
         ItemStack hovered = hoveredSlot.getItem();
 
-        if ((carried.getItem() instanceof ApplicatorItem applicator
-              && applicator.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered))
-          || (hovered.getItem() instanceof ApplicationTargetItem applicationTarget
-              && applicationTarget.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered))) {
-            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(hovered), hovered.getTooltipImage(), x, y);
-            ci.cancel();
+        if (carried.getItem() instanceof ApplicatorItem applicator) {
+            if (applicator.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered)
+                  || applicator.shouldRenderSlotTooltipWhileCarrying(Minecrft.player(), getMenu(), hoveredSlot, carried)) {
+                guiGraphics.renderTooltip(font, getTooltipFromContainerItem(hovered), hovered.getTooltipImage(), x, y);
+                ci.cancel();
+            }
+        }
+
+        if (hovered.getItem() instanceof ApplicationTargetItem applicationTarget) {
+            if (applicationTarget.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered)
+                  || applicationTarget.shouldRenderSlotTooltipWhileCarrying(Minecrft.player(), getMenu(), hoveredSlot, carried)) {
+                guiGraphics.renderTooltip(font, getTooltipFromContainerItem(hovered), hovered.getTooltipImage(), x, y);
+                ci.cancel();
+            }
         }
     }
 }
