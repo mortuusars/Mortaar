@@ -3,10 +3,16 @@ package io.github.mortuusars.mortaar.fabric;
 import com.mojang.brigadier.arguments.ArgumentType;
 import io.github.mortuusars.mortaar.Register;
 import io.github.mortuusars.mortaar.Mortaar;
+import io.github.mortuusars.mortaar.network.packet.Packet;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -15,8 +21,12 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceKey;
@@ -74,12 +84,12 @@ public class RegisterImpl {
                                                                         MobCategory category, float width, float height,
                                                                         int clientTrackingRange, boolean velocityUpdates, int updateInterval) {
         EntityType<T> type = Registry.register(BuiltInRegistries.ENTITY_TYPE, Mortaar.resource(id),
-                EntityType.Builder.of(factory, category)
-                        .sized(width, height)
-                        .clientTrackingRange(clientTrackingRange)
-                        .alwaysUpdateVelocity(velocityUpdates)
-                        .updateInterval(updateInterval)
-                        .build());
+              EntityType.Builder.of(factory, category)
+                    .sized(width, height)
+                    .clientTrackingRange(clientTrackingRange)
+                    .alwaysUpdateVelocity(velocityUpdates)
+                    .updateInterval(updateInterval)
+                    .build());
         return () -> type;
     }
 
@@ -163,5 +173,48 @@ public class RegisterImpl {
         net.minecraft.core.Registry.register(BuiltInRegistries.CUSTOM_STAT, location, location);
         net.minecraft.stats.Stats.CUSTOM.get(location, formatter);
         return () -> location;
+    }
+
+    // --
+
+    @SuppressWarnings("unchecked")
+    public static void serverboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        PayloadTypeRegistry.playC2S().register(
+              (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
+        ServerPlayNetworking.registerGlobalReceiver(
+              (CustomPacketPayload.Type<Packet>) type, (payload, context) -> payload.handle(PacketFlow.SERVERBOUND, context.player()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void clientboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        PayloadTypeRegistry.playS2C().register(
+              (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            Client.registerPacketReceiver((CustomPacketPayload.Type<Packet>) type);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void bidirectionalPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        PayloadTypeRegistry.playC2S().register(
+              (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
+        ServerPlayNetworking.registerGlobalReceiver(
+              (CustomPacketPayload.Type<Packet>) type, (payload, context) -> payload.handle(PacketFlow.SERVERBOUND, context.player()));
+        PayloadTypeRegistry.playS2C().register(
+              (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            Client.registerPacketReceiver((CustomPacketPayload.Type<Packet>) type);
+        }
+    }
+
+    /**
+     * Putting code in the inner class prevents classloading on the wrong environment.
+     */
+    private static class Client {
+        public static void registerPacketReceiver(CustomPacketPayload.Type<Packet> type) {
+            ClientPlayNetworking.registerGlobalReceiver(
+                  type, (payload, context) -> payload.handle(PacketFlow.CLIENTBOUND, context.player()));
+        }
     }
 }

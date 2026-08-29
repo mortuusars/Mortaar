@@ -57,16 +57,6 @@ loom {
             programArgs "--output", project(':common').file("src/generated").absolutePath // Outputs to common project
             programArgs "--existing", project(':common').file("src/main/resources").absolutePath // Makes datagen see resources from common folder
         }
-
-        exportClient {
-            client()
-            property('wiki_exporter.enabled', 'true')
-        }
-        exportServer {
-            server()
-            programArgs('nogui')
-            property('wiki_exporter.enabled', 'true')
-        }
     }
 }
 

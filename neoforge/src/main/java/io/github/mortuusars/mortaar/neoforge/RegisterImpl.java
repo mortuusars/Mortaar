@@ -3,6 +3,7 @@ package io.github.mortuusars.mortaar.neoforge;
 import com.mojang.brigadier.arguments.ArgumentType;
 import io.github.mortuusars.mortaar.Register;
 import io.github.mortuusars.mortaar.Mortaar;
+import io.github.mortuusars.mortaar.network.packet.Packet;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -11,6 +12,10 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,10 +40,9 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.jetbrains.annotations.ApiStatus;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -154,5 +158,29 @@ public class RegisterImpl {
     public static Supplier<ResourceLocation> stat(ResourceLocation location, StatFormatter formatter) {
         STATS.put(location, formatter);
         return CUSTOM_STATS.register(location.getPath(), () -> location);
+    }
+
+    // --
+
+    @ApiStatus.Internal
+    public static final List<CustomPacketPayload.TypeAndCodec<? super RegistryFriendlyByteBuf, ? extends Packet>> serverboundPackets = new ArrayList<>();
+    @ApiStatus.Internal
+    public static final List<CustomPacketPayload.TypeAndCodec<? super RegistryFriendlyByteBuf, ? extends Packet>> clientboundPackets = new ArrayList<>();
+    @ApiStatus.Internal
+    public static final List<CustomPacketPayload.TypeAndCodec<? super RegistryFriendlyByteBuf, ? extends Packet>> bidirectionalPackets = new ArrayList<>();
+
+    @SuppressWarnings("unchecked")
+    public static void serverboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        serverboundPackets.add(new CustomPacketPayload.TypeAndCodec<>((CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void clientboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        clientboundPackets.add(new CustomPacketPayload.TypeAndCodec<>((CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void bidirectionalPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        bidirectionalPackets.add(new CustomPacketPayload.TypeAndCodec<>((CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec));
     }
 }

@@ -2,6 +2,8 @@ package io.github.mortuusars.mortaar;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import io.github.mortuusars.mortaar.network.Packets;
+import io.github.mortuusars.mortaar.network.packet.Packet;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -9,7 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -147,6 +152,23 @@ public class Register {
 
     @ExpectPlatform
     public static Supplier<ResourceLocation> stat(ResourceLocation location, StatFormatter formatter) {
+        throw new AssertionError();
+    }
+
+    // --
+
+    @ExpectPlatform
+    public static void serverboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void clientboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void bidirectionalPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
         throw new AssertionError();
     }
 }

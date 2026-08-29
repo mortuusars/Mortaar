@@ -1,12 +1,20 @@
 package io.github.mortuusars.mortaar.neoforge;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class PlatformImpl {
     public static boolean isInDevEnv() {
         return !FMLEnvironment.production;
@@ -26,5 +34,13 @@ public class PlatformImpl {
 
     public static Path getConfigDirectory() {
         return FMLPaths.CONFIGDIR.get();
+    }
+
+    public static @Nullable MinecraftServer getCurrentServer() {
+        return ServerLifecycleHooks.getCurrentServer();
+    }
+
+    public static void openMenu(ServerPlayer serverPlayer, MenuProvider menuProvider, Consumer<RegistryFriendlyByteBuf> extraDataWriter) {
+        serverPlayer.openMenu(menuProvider, extraDataWriter);
     }
 }
