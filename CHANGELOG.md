@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+- Added Registrar
+- Fixed NeoForge packet registering
+
 ## 1.3.0
 - Added Bugger and networking
 
