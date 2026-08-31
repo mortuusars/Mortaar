@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.1
+- Added lang files
+
 ## 1.4.0
 - Added Registrar
 - Fixed NeoForge packet registering
