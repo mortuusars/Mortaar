@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.2
+- Added tooltip component registration
+
 ## 1.4.1
 - Added lang files
 

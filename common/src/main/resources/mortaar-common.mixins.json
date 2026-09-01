@@ -9,7 +9,8 @@
     "bugger.KeyboardHandlerMixin",
     "bugger.MouseHandlerMixin",
     "bugger.ScreenOverlayMixin",
-    "bugger.ScreenRenderLinesInvoker"
+    "bugger.ScreenRenderLinesInvoker",
+    "tooltip.ClientTooltipComponentMixin"
   ],
   "mixins": [
   ],

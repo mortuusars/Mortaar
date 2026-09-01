@@ -2,7 +2,7 @@ package io.github.mortuusars.mortaar.client.gui.widget;
 
 import com.google.common.base.Preconditions;
 import io.github.mortuusars.mortaar.client.gui.Sprites;
-import io.github.mortuusars.mortaar.client.gui.Tooltips;
+import io.github.mortuusars.mortaar.client.gui.tooltip.Tooltips;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
