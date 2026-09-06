@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.4
+- Added isClient/isDedicatedServer helper methods
+
 ## 1.5.3
 - Added TintColor and codecs from Envelope
 

@@ -1,6 +1,7 @@
 package io.github.mortuusars.mortaar.fabric;
 
 import io.netty.buffer.ByteBufUtil;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.loader.api.FabricLoader;
@@ -22,6 +23,10 @@ import java.util.function.Consumer;
 public class PlatformImpl {
     public static boolean isInDevEnv() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    public static boolean isClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 
     public static boolean isModLoaded(String modId) {

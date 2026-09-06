@@ -4,6 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
@@ -18,6 +19,10 @@ import java.util.function.Consumer;
 public class PlatformImpl {
     public static boolean isInDevEnv() {
         return !FMLEnvironment.production;
+    }
+
+    public static boolean isClient() {
+        return FMLEnvironment.dist == Dist.CLIENT;
     }
 
     public static boolean isModLoaded(String modId) {

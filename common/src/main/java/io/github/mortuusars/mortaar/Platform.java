@@ -20,6 +20,15 @@ public class Platform {
     }
 
     @ExpectPlatform
+    public static boolean isClient() {
+        throw new AssertionError();
+    }
+
+    public static boolean isDedicatedServer() {
+        return !isClient();
+    }
+
+    @ExpectPlatform
     public static boolean isModLoaded(String modId) {
         throw new AssertionError();
     }
