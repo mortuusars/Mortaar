@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.3
+- Added TintColor and codecs from Envelope
+
 ## 1.5.2
 - Added tooltip component registration
 
