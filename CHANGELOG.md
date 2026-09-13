@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.6
+- Added Time
+
 ## 1.5.5
 - Added ResourceDefinition
 - Moved several util classes from Envelope
