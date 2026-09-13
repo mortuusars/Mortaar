@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.5
+- Added ResourceDefinition
+- Moved several util classes from Envelope
+
 ## 1.5.4
 - Added isClient/isDedicatedServer helper methods
 
