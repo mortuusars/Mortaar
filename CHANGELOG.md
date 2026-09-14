@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.8
+- Fix Creative Tab registering on NeoForge
+
 ## 1.5.7
 - Added Creative Tab to Registrar
 

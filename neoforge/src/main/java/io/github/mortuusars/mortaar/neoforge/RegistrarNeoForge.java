@@ -108,6 +108,7 @@ public class RegistrarNeoForge implements Registrar {
         ENTITY_TYPES.register(modEventBus);
         ENTITY_DATA_SERIALIZERS.register(modEventBus);
         ITEMS.register(modEventBus);
+        CREATIVE_TABS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         RECIPE_TYPES.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
