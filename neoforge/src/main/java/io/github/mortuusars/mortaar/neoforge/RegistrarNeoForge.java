@@ -22,6 +22,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -50,6 +51,7 @@ public class RegistrarNeoForge implements Registrar {
     public final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES;
     public final DeferredRegister<PoiType> POI_TYPES;
     public final DeferredRegister<Item> ITEMS;
+    public final DeferredRegister<CreativeModeTab> CREATIVE_TABS;
     public final DeferredRegister<EntityType<?>> ENTITY_TYPES;
     public final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS;
     public final DeferredRegister<MenuType<?>> MENU_TYPES;
@@ -71,6 +73,7 @@ public class RegistrarNeoForge implements Registrar {
         BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, modId);
         POI_TYPES = DeferredRegister.create(Registries.POINT_OF_INTEREST_TYPE, modId);
         ITEMS = DeferredRegister.create(Registries.ITEM, modId);
+        CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, modId);
         ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, modId);
         ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, modId);
         MENU_TYPES = DeferredRegister.create(Registries.MENU, modId);
@@ -143,6 +146,11 @@ public class RegistrarNeoForge implements Registrar {
     @Override
     public <T extends Item> Supplier<T> item(String id, Supplier<T> supplier) {
         return ITEMS.register(id, supplier);
+    }
+
+    @Override
+    public <T extends CreativeModeTab> Supplier<T> creativeTab(String id, Supplier<T> supplier) {
+        return CREATIVE_TABS.register(id, supplier);
     }
 
     @Override

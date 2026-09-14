@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.7
+- Added Creative Tab to Registrar
+
 ## 1.5.6
 - Added Time
 

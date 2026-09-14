@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -51,6 +52,8 @@ public interface Registrar {
     Supplier<PoiType> poiType(ResourceKey<PoiType> key, int ticketCount, int searchDistance, Supplier<Set<BlockState>> states);
 
     <T extends Item> Supplier<T> item(String id, Supplier<T> supplier);
+
+    <T extends CreativeModeTab> Supplier<T> creativeTab(String id, Supplier<T> supplier);
 
     <T extends Entity> Supplier<EntityType<T>> entityType(String id, EntityType.EntityFactory<T> factory,
                                                           MobCategory category, float width, float height,

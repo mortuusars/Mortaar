@@ -28,6 +28,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -82,6 +83,12 @@ public class RegistrarFabric implements Registrar {
     @Override
     public <T extends Item> Supplier<T> item(String id, Supplier<T> supplier) {
         T obj = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(modId, id), supplier.get());
+        return () -> obj;
+    }
+
+    @Override
+    public <T extends CreativeModeTab> Supplier<T> creativeTab(String id, Supplier<T> supplier) {
+        T obj = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(modId, id), supplier.get());
         return () -> obj;
     }
 
