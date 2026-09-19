@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.10
+- Resource
+
+## 1.5.9
+- ResourceReference
+
 ## 1.5.8
 - Fix Creative Tab registering on NeoForge
 
