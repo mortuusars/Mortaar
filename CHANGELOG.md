@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+- Tests
+- GTID
+- GameTime
+
 ## 1.5.10
 - Resource
 

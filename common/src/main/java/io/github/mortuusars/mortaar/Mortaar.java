@@ -3,6 +3,7 @@ package io.github.mortuusars.mortaar;
 import com.mojang.logging.LogUtils;
 import io.github.mortuusars.mortaar.bugger.Bugger;
 import io.github.mortuusars.mortaar.bugger.network.ClientboundBuggerDataPacket;
+import io.github.mortuusars.mortaar.bugger.test.cases.MortaarBuggerTests;
 import io.github.mortuusars.mortaar.util.supporter.Supporters;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ public class Mortaar {
 
     public static void init() {
         Bugger.enabler = () -> Config.Server.SPEC.isLoaded() && Config.Server.DEBUG_MODE.get();
+        Bugger.addTests(MortaarBuggerTests::createTests);
 
         Register.clientboundPacket(ClientboundBuggerDataPacket.TYPE, ClientboundBuggerDataPacket.STREAM_CODEC);
 

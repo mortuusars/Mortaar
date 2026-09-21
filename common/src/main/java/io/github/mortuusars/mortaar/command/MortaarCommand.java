@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.mortuusars.mortaar.Config;
-import io.github.mortuusars.mortaar.network.Packets;
+import io.github.mortuusars.mortaar.bugger.Bugger;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,8 +18,8 @@ public class MortaarCommand {
               .requires((stack) -> stack.hasPermission(3))
               .then(Commands.literal("debug")
                     .executes(MortaarCommand::toggleDebugMode)
-                    /*.then(Commands.literal("test")
-                          .executes(MortaarCommand::test))*/));
+                    .then(Commands.literal("tests")
+                          .executes(MortaarCommand::runTests))));
     }
 
     private static int toggleDebugMode(CommandContext<CommandSourceStack> context) {
@@ -30,8 +30,10 @@ public class MortaarCommand {
         return 0;
     }
 
-    private static int test(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = context.getSource().getPlayerOrException();
+    private static int runTests(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Bugger.runTests(
+              context.getSource().getPlayerOrException(),
+              message -> context.getSource().sendSuccess(() -> message, true));
         return 0;
     }
 }

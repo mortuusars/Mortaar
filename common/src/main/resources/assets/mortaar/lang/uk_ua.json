@@ -1,3 +1,14 @@
 {
+  "gui.mortaar.game_time.years": "%sр",
+  "gui.mortaar.game_time.months": "%sміс",
+  "gui.mortaar.game_time.weeks": "%sтиж",
+  "gui.mortaar.game_time.days": "%sд",
+  "gui.mortaar.game_time.hours": "%sгод",
+  "gui.mortaar.game_time.minutes": "%sхв",
+  "gui.mortaar.game_time.seconds": "%sс",
+  "gui.mortaar.game_time.less_than_one_hour": "<1год",
+  "gui.mortaar.game_time.less_than_one_minute": "<1хв",
+  "gui.mortaar.game_time.less_than_one_second": "<1с",
+
   "mortaar.configuration.debug_mode": "Режим налагодження"
 }
