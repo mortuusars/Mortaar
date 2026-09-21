@@ -5,6 +5,6 @@ import io.github.mortuusars.mortaar.bugger.test.BuggerTests;
 public class MortaarBuggerTests {
     public static BuggerTests createTests() {
         return new BuggerTests()
-              .addFrom(new GTIDTests());
+              .addFrom(new GameTimeIdTests());
     }
 }

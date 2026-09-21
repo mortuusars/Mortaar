@@ -16,14 +16,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Game Time (based) Identifier<br>
  * Simpler alternative to UUID, for cases when short representation is more important than safety.
  */
-public class GTID implements GameTime, Comparable<GTID> {
-    public static final Codec<GTID> CODEC = Codec.STRING.comapFlatMap(GTID::parseFromHex, GTID::toString);
-    public static final Codec<GTID> CODEC_DECIMAL = Codec.STRING.comapFlatMap(GTID::parseFromDecimal, GTID::toStringDecimal);
+public class GameTimeId implements GameTime, Comparable<GameTimeId> {
+    public static final Codec<GameTimeId> CODEC = Codec.STRING.comapFlatMap(GameTimeId::parseFromHex, GameTimeId::toString);
+    public static final Codec<GameTimeId> CODEC_DECIMAL = Codec.STRING.comapFlatMap(GameTimeId::parseFromDecimal, GameTimeId::toStringDecimal);
 
-    public static final StreamCodec<ByteBuf, GTID> STREAM_CODEC = StreamCodec.composite(
-          ByteBufCodecs.VAR_LONG, GTID::getTick,
-          ByteBufCodecs.VAR_INT, GTID::getSuffix,
-          GTID::new
+    public static final StreamCodec<ByteBuf, GameTimeId> STREAM_CODEC = StreamCodec.composite(
+          ByteBufCodecs.VAR_LONG, GameTimeId::getTick,
+          ByteBufCodecs.VAR_INT, GameTimeId::getSuffix,
+          GameTimeId::new
     );
 
     protected static volatile long currentClientTick;
@@ -34,7 +34,7 @@ public class GTID implements GameTime, Comparable<GTID> {
     protected final long tick;
     protected final int suffix;
 
-    protected GTID(long tick, int suffix) {
+    protected GameTimeId(long tick, int suffix) {
         Preconditions.checkArgument(tick >= 0, "Tick must be >= 0. Value: " + tick);
         Preconditions.checkArgument(suffix >= 0, "Suffix must be >= 0. Value: " + suffix);
         this.tick = tick;
@@ -47,8 +47,8 @@ public class GTID implements GameTime, Comparable<GTID> {
      * - Client and Server has their own suffix tracking.<br><br>
      * Uniqueness is guaranteed only for "correct" flow of time. Each time gameTime tick changes - suffix resets.
      */
-    public static GTID create(Level level) {
-        return new GTID(level.getGameTime(), getAndUpdateSuffix(level.getGameTime(), level.isClientSide()));
+    public static GameTimeId create(Level level) {
+        return new GameTimeId(level.getGameTime(), getAndUpdateSuffix(level.getGameTime(), level.isClientSide()));
     }
 
     /**
@@ -58,23 +58,23 @@ public class GTID implements GameTime, Comparable<GTID> {
      * - Client and Server has their own suffix tracking.<br><br>
      * Uniqueness is guaranteed only for "correct" flow of time. Each time tick changes - suffix resets.
      */
-    public static GTID createChecked(long tick, boolean clientSide) {
-        return new GTID(tick, getAndUpdateSuffix(tick, clientSide));
+    public static GameTimeId createChecked(long tick, boolean clientSide) {
+        return new GameTimeId(tick, getAndUpdateSuffix(tick, clientSide));
     }
 
     /**
      *  Creates a GTID from provided values.<br>
      *  No attempts to make the ID unique is done here.
      */
-    public static GTID createUncheked(long tick, int suffix) {
-        return new GTID(tick, suffix);
+    public static GameTimeId createUncheked(long tick, int suffix) {
+        return new GameTimeId(tick, suffix);
     }
 
     /**
      *  Creates a GTID from provided value.<br>
      *  No attempts to make the ID unique is done here.
      */
-    public static GTID createUncheked(long tick) {
+    public static GameTimeId createUncheked(long tick) {
         return createUncheked(tick, 0);
     }
 
@@ -106,7 +106,7 @@ public class GTID implements GameTime, Comparable<GTID> {
     }
 
     @Override
-    public int compareTo(@NotNull GTID other) {
+    public int compareTo(@NotNull GameTimeId other) {
         Preconditions.checkNotNull(other);
         if (equals(other)) return 0;
         if (tick == other.tick) return Integer.compare(suffix, other.suffix);
@@ -117,7 +117,7 @@ public class GTID implements GameTime, Comparable<GTID> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GTID id = (GTID) o;
+        GameTimeId id = (GameTimeId) o;
         return tick == id.tick && suffix == id.suffix;
     }
 
@@ -147,7 +147,7 @@ public class GTID implements GameTime, Comparable<GTID> {
      * - '7F7F7F-7F7F' (tick-suffix)<br>
      * - '7F7F7F' (only tick)
      */
-    public static DataResult<GTID> parseFromHex(String input) {
+    public static DataResult<GameTimeId> parseFromHex(String input) {
         if (input == null || input.isBlank()) {
             return DataResult.error(() -> "GTID string is null or empty.");
         }
@@ -160,7 +160,7 @@ public class GTID implements GameTime, Comparable<GTID> {
                 if (tick < 0) {
                     return DataResult.error(() -> "Tick must be larger or equal to 0: " + input);
                 }
-                return DataResult.success(new GTID(tick, 0));
+                return DataResult.success(new GameTimeId(tick, 0));
             } catch (NumberFormatException e) {
                 return DataResult.error(() -> "Invalid number in GTID: " + input + " - " + e.getMessage());
             }
@@ -178,13 +178,13 @@ public class GTID implements GameTime, Comparable<GTID> {
             if (suffix < 0) {
                 return DataResult.error(() -> "Suffix must be larger or equal to 0: " + input);
             }
-            return DataResult.success(new GTID(tick, suffix));
+            return DataResult.success(new GameTimeId(tick, suffix));
         } catch (Exception e) {
             return DataResult.error(() -> "Invalid input for GTID: " + input + " - " + e.getMessage());
         }
     }
 
-    public static DataResult<GTID> parseFromDecimal(String input) {
+    public static DataResult<GameTimeId> parseFromDecimal(String input) {
         if (input == null || input.isBlank()) {
             return DataResult.error(() -> "GTID string is null or empty.");
         }
@@ -197,7 +197,7 @@ public class GTID implements GameTime, Comparable<GTID> {
                 if (tick < 0) {
                     return DataResult.error(() -> "Tick must be larger or equal to 0: " + input);
                 }
-                return DataResult.success(new GTID(tick, 0));
+                return DataResult.success(new GameTimeId(tick, 0));
             } catch (NumberFormatException e) {
                 return DataResult.error(() -> "Invalid number in GTID: " + input + " - " + e.getMessage());
             }
@@ -215,7 +215,7 @@ public class GTID implements GameTime, Comparable<GTID> {
             if (suffix < 0) {
                 return DataResult.error(() -> "Suffix must be larger or equal to 0: " + input);
             }
-            return DataResult.success(new GTID(tick, suffix));
+            return DataResult.success(new GameTimeId(tick, suffix));
         } catch (Exception e) {
             return DataResult.error(() -> "Invalid input for GTID: " + input + " - " + e.getMessage());
         }

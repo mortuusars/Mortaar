@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.1
+- Rename GTID to GameTimeId
+- GameTimeIdArgument
+
 ## 1.6.0
 - Tests
 - GTID
