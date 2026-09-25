@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.2
+- Fix occasional concurrent modification crash when creating a Registrar
+
 ## 1.6.1
 - Rename GTID to GameTimeId
 - GameTimeIdArgument

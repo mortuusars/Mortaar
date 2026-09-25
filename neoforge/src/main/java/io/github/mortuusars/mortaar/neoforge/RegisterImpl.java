@@ -9,9 +9,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RegisterImpl {
-    public static final Map<String, RegistrarNeoForge> REGISTRARS = new HashMap<>();
+    public static final Map<String, RegistrarNeoForge> REGISTRARS = new ConcurrentHashMap<>();
 
     public static Registrar registrar(String modId) {
         return REGISTRARS.computeIfAbsent(modId, RegistrarNeoForge::new);

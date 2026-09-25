@@ -14,9 +14,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RegisterImpl {
-    public static final Map<String, RegistrarFabric> REGISTRARS = new HashMap<>();
+    public static final Map<String, RegistrarFabric> REGISTRARS = new ConcurrentHashMap<>();
 
     public static Registrar registrar(String modId) {
         return REGISTRARS.computeIfAbsent(modId, RegistrarFabric::new);
