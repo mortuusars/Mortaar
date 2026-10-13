@@ -1,4 +1,4 @@
-package io.github.mortuusars.mortaar.mixin.application_hover_tooltips;
+package io.github.mortuusars.mortaar.mixin.item_application;
 
 import io.github.mortuusars.mortaar.client.Minecrft;
 import io.github.mortuusars.mortaar.world.item.ApplicationTargetItem;
@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(AbstractContainerScreen.class)
@@ -47,12 +48,19 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ItemStack carried = getMenu().getCarried();
+
+        if (carried.isEmpty()) {
+            return;
+        }
+
         ItemStack hovered = hoveredSlot.getItem();
 
         if (carried.getItem() instanceof ApplicatorItem applicator) {
             if (applicator.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered)
                   || applicator.shouldRenderSlotTooltipWhileCarrying(Minecrft.player(), getMenu(), hoveredSlot, carried)) {
-                guiGraphics.renderTooltip(font, getTooltipFromContainerItem(hovered), hovered.getTooltipImage(), x, y);
+                List<Component> lines = applicator.addTooltipLinesToTarget(Minecrft.player(), getMenu(), hoveredSlot,
+                      carried, new ArrayList<>(getTooltipFromContainerItem(hovered)));
+                guiGraphics.renderTooltip(font, lines, hovered.getTooltipImage(), x, y);
                 ci.cancel();
             }
         }
@@ -60,7 +68,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (hovered.getItem() instanceof ApplicationTargetItem applicationTarget) {
             if (applicationTarget.shouldRenderSlotTooltipWhileCarrying(Minecrft.level(), carried, hovered)
                   || applicationTarget.shouldRenderSlotTooltipWhileCarrying(Minecrft.player(), getMenu(), hoveredSlot, carried)) {
-                guiGraphics.renderTooltip(font, getTooltipFromContainerItem(hovered), hovered.getTooltipImage(), x, y);
+                List<Component> lines = applicationTarget.addTooltipLinesToItself(Minecrft.player(), getMenu(), hoveredSlot,
+                      carried, new ArrayList<>(getTooltipFromContainerItem(hovered)));
+                guiGraphics.renderTooltip(font, lines, hovered.getTooltipImage(), x, y);
                 ci.cancel();
             }
         }
