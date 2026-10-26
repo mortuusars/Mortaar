@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.6
+- Models
+
 ## 1.6.2
 - Fix occasional concurrent modification crash when creating a Registrar
 
