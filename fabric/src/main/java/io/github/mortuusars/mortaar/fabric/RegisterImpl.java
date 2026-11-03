@@ -12,7 +12,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,7 +26,7 @@ public class RegisterImpl {
 
     @SuppressWarnings("unchecked")
     public static void serverboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
-        PayloadTypeRegistry.playC2S().register(
+        PayloadTypeRegistry.serverboundPlay().register(
               (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
         ServerPlayNetworking.registerGlobalReceiver(
               (CustomPacketPayload.Type<Packet>) type, (payload, context) -> payload.handle(PacketFlow.SERVERBOUND, context.player()));
@@ -35,7 +34,7 @@ public class RegisterImpl {
 
     @SuppressWarnings("unchecked")
     public static void clientboundPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
-        PayloadTypeRegistry.playS2C().register(
+        PayloadTypeRegistry.clientboundPlay().register(
               (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
@@ -45,11 +44,11 @@ public class RegisterImpl {
 
     @SuppressWarnings("unchecked")
     public static void bidirectionalPacket(CustomPacketPayload.Type<? extends Packet> type, StreamCodec<? extends FriendlyByteBuf, ? extends Packet> codec) {
-        PayloadTypeRegistry.playC2S().register(
+        PayloadTypeRegistry.serverboundPlay().register(
               (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
         ServerPlayNetworking.registerGlobalReceiver(
               (CustomPacketPayload.Type<Packet>) type, (payload, context) -> payload.handle(PacketFlow.SERVERBOUND, context.player()));
-        PayloadTypeRegistry.playS2C().register(
+        PayloadTypeRegistry.clientboundPlay().register(
               (CustomPacketPayload.Type<Packet>) type, (StreamCodec<FriendlyByteBuf, Packet>) codec);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             Client.registerPacketReceiver((CustomPacketPayload.Type<Packet>) type);

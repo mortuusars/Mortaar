@@ -8,7 +8,7 @@ import io.github.mortuusars.mortaar.network.packet.Packet;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public class NeoForgeCommonEvents {
         event.enqueueWork(() -> {
             // Querying the stat properly "registers" it or something, idk
             for (Map.Entry<String, RegistrarNeoForge> entry : RegisterImpl.REGISTRARS.entrySet()) {
-                for (Map.Entry<ResourceLocation, StatFormatter> statEntry : entry.getValue().STATS.entrySet()) {
+                for (Map.Entry<Identifier, StatFormatter> statEntry : entry.getValue().STATS.entrySet()) {
                     Stats.CUSTOM.get(statEntry.getKey(), statEntry.getValue());
                 }
             }

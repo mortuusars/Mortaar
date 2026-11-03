@@ -69,21 +69,6 @@ public class Supporters {
                 return Supporter.LIST_CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(json))
                       .resultOrPartial(LOGGER::error)
                       .orElse(Collections.emptyList());
-//                TODO CODECS
-//                Gson gson = new Gson();
-//                JsonArray array = JsonParser.parseString(json).getAsJsonArray();
-//                List<Supporter> supporters = new ArrayList<>();
-//
-//                for (JsonElement element : array) {
-//                    try {
-//                        Supporter p = gson.fromJson(element, Supporter.class);
-//                        supporters.add(p);
-//                    } catch (Exception e) {
-//                        LOGGER.warn("Cannot parse supporter from '{}': {}", element, e.getMessage());
-//                    }
-//                }
-//
-//                return supporters;
             } catch (Exception e) {
                 LOGGER.warn("Cannot get list of supporters: {}", e.getMessage());
                 return Collections.emptyList();

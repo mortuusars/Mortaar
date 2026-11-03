@@ -8,12 +8,12 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import io.github.mortuusars.mortaar.util.JsonSyntaxHighlighter;
 import io.github.mortuusars.mortaar.client.Minecrft;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -62,8 +62,9 @@ public class DataScreenPage implements BuggerScreenPage {
             lines.add(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());
             lines.add("");
 
-            CompoundTag nbt = Util.make(new CompoundTag(), entity::save);
-            lines.addAll(highlightAndSplitJson(CompoundTag.CODEC.encodeStart(JsonOps.INSTANCE, nbt)));
+            //TODO: Fix
+//            CompoundTag nbt = Util.make(new CompoundTag(), entity::save);
+//            lines.addAll(highlightAndSplitJson(CompoundTag.CODEC.encodeStart(JsonOps.INSTANCE, nbt)));
 
             return lines;
         } else {
@@ -89,15 +90,17 @@ public class DataScreenPage implements BuggerScreenPage {
 
     @Override
     public List<String> getRightLines() {
-        @Nullable HitResult hitResult = Minecrft.get().hitResult;
-        if (hitResult instanceof BlockHitResult blockHitResult && blockHitResult.getType() != HitResult.Type.MISS) {
-            return Minecrft.level().getBlockState(blockHitResult.getBlockPos()).getTags().map(key -> "#" + key.location()).toList();
-        } else if (hitResult instanceof EntityHitResult entityHitResult) {
-            //noinspection deprecation
-            return entityHitResult.getEntity().getType().builtInRegistryHolder().tags().map(key -> "#" + key.location()).toList();
-        } else {
-            return getItemInHand().getTags().map(key -> "#" + key.location()).toList();
-        }
+        //TODO: FIX
+//        @Nullable HitResult hitResult = Minecrft.get().hitResult;
+//        if (hitResult instanceof BlockHitResult blockHitResult && blockHitResult.getType() != HitResult.Type.MISS) {
+//            return Minecrft.level().getBlockState(blockHitResult.getBlockPos()).getTags().map(key -> "#" + key.location()).toList();
+//        } else if (hitResult instanceof EntityHitResult entityHitResult) {
+//            //noinspection deprecation
+//            return entityHitResult.getEntity().getType().builtInRegistryHolder().tags().map(key -> "#" + key.location()).toList();
+//        } else {
+//            return getItemInHand().getTags().map(key -> "#" + key.location()).toList();
+//        }
+        return List.of();
     }
 
     private ItemStack getItemInHand() {

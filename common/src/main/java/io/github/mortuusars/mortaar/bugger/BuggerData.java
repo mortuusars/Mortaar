@@ -7,7 +7,7 @@ import io.github.mortuusars.mortaar.bugger.network.ClientboundBuggerDataPacket;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,12 +26,12 @@ import java.util.function.Function;
  * but it simplifies data writing and reading (and allows sending arbitrary data), which is more important than performance for debug cases.
  */
 public class BuggerData {
-    public static final Map<ResourceLocation, Data<?>> DEFINITIONS = new HashMap<>();
-    public static final Map<ResourceLocation, Object> DATA = new HashMap<>();
+    public static final Map<Identifier, Data<?>> DEFINITIONS = new HashMap<>();
+    public static final Map<Identifier, Object> DATA = new HashMap<>();
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static <T> Optional<T> get(ResourceLocation id) {
+    public static <T> Optional<T> get(Identifier id) {
         if (!Bugger.isEnabled()) {
             return Optional.empty();
         }
@@ -46,7 +46,7 @@ public class BuggerData {
         }
     }
 
-    public static void send(ResourceLocation id, Function<RegistryAccess, @Nullable Tag> dataSupplier) {
+    public static void send(Identifier id, Function<RegistryAccess, @Nullable Tag> dataSupplier) {
         //noinspection ConstantValue
         if (!Bugger.isEnabled() || !(Platform.getCurrentServer() instanceof MinecraftServer server)) {
             return;
@@ -58,7 +58,7 @@ public class BuggerData {
         new ClientboundBuggerDataPacket(id, tag).sendToAllClients();
     }
 
-    public static void receive(ResourceLocation id, CompoundTag tag, RegistryAccess registryAccess) {
+    public static void receive(Identifier id, CompoundTag tag, RegistryAccess registryAccess) {
         if (!Bugger.isEnabled()) {
             return;
         }
@@ -74,7 +74,7 @@ public class BuggerData {
     }
 
     // Glorious generics magick
-    private static <T> void receiveInternal(Data<T> definition, ResourceLocation id, @NotNull Object newValueObj) {
+    private static <T> void receiveInternal(Data<T> definition, Identifier id, @NotNull Object newValueObj) {
         DATA.compute(id, (dataId, existingValueObj) -> {
             if (existingValueObj == null) return newValueObj;
             @SuppressWarnings("unchecked")

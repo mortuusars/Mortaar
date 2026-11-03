@@ -9,16 +9,16 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public record ClientboundBuggerDataPacket(ResourceLocation id, CompoundTag data) implements Packet {
-    public static final ResourceLocation ID = Mortaar.resource("bugger_data");
+public record ClientboundBuggerDataPacket(Identifier id, CompoundTag data) implements Packet {
+    public static final Identifier ID = Mortaar.resource("bugger_data");
     public static final Type<ClientboundBuggerDataPacket> TYPE = new Type<>(ID);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundBuggerDataPacket> STREAM_CODEC = StreamCodec.composite(
-          ResourceLocation.STREAM_CODEC, ClientboundBuggerDataPacket::id,
+          Identifier.STREAM_CODEC, ClientboundBuggerDataPacket::id,
           ByteBufCodecs.COMPOUND_TAG, ClientboundBuggerDataPacket::data,
           ClientboundBuggerDataPacket::new
     );

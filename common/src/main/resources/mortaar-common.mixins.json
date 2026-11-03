@@ -4,12 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [
-    "item_application.AbstractContainerScreenMixin",
     "bugger.EntityRendererMixin",
     "bugger.KeyboardHandlerMixin",
     "bugger.MouseHandlerMixin",
     "bugger.ScreenOverlayMixin",
     "bugger.ScreenRenderLinesInvoker",
+    "item_application.AbstractContainerScreenMixin",
     "tooltip.ClientTooltipComponentMixin"
   ],
   "mixins": [

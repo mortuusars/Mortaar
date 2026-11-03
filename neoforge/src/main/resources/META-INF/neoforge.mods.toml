@@ -2,7 +2,7 @@ modLoader="javafml"
 license="${mod_license}"
 loaderVersion="${neoforge_loader_version_range}"
 issueTrackerURL="${mod_issues}"
-logoFile="icon.png"
+iconFile="icon.png"
 
 [[mixins]]
 config="${mod_id}-common.mixins.json"

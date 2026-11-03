@@ -10,7 +10,7 @@ import io.github.mortuusars.mortaar.bugger.screen.page.VanillaDebugScreenPage;
 import io.github.mortuusars.mortaar.client.Minecrft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
@@ -41,9 +41,9 @@ public class BuggerScreen {
         currentPage.activated();
     }
 
-    public static boolean active() {
-        return Bugger.isEnabled() && Minecrft.get().gui.getDebugOverlay().showDebugScreen();
-    }
+//    public static boolean active() {
+//        return Bugger.isEnabled() && Minecrft.get().gui.getDebugOverlay().showDebugScreen();
+//    }
 
     public static boolean isOnVanillaDebugPage() {
         return currentPage instanceof VanillaDebugScreenPage;
@@ -87,8 +87,8 @@ public class BuggerScreen {
               : Optional.empty();
     }
 
-    @SuppressWarnings("deprecation")
-    public static boolean render(GuiGraphics guiGraphics) {
+    /*@SuppressWarnings("deprecation")
+    public static boolean render(GuiGraphicsExtractor guiGraphics) {
         if (!active()) return false;
 
         Minecraft.getInstance().getProfiler().push("bugger");
@@ -290,7 +290,7 @@ public class BuggerScreen {
             zoomIn();
             return true;
         }
-        if ((key == 333 /*KEY_SUBTRACT*/ || key == InputConstants.KEY_MINUS) && Screen.hasControlDown()) {
+        if ((key == 333 *//*KEY_SUBTRACT*//* || key == InputConstants.KEY_MINUS) && Screen.hasControlDown()) {
             zoomOut();
             return true;
         }
@@ -321,7 +321,7 @@ public class BuggerScreen {
             zoomIn();
             return true;
         }
-        if ((key == 333 /*KEY_SUBTRACT*/ || key == InputConstants.KEY_MINUS) && Screen.hasControlDown()) {
+        if ((key == 333 *//*KEY_SUBTRACT*//* || key == InputConstants.KEY_MINUS) && Screen.hasControlDown()) {
             zoomOut();
             return true;
         }
@@ -334,5 +334,7 @@ public class BuggerScreen {
 
     private static void test() {
         boolean a = true;
-    }
+    }*/
+
+
 }

@@ -8,7 +8,7 @@ import io.github.mortuusars.mortaar.command.argument.GameTimeIdArgument;
 import io.github.mortuusars.mortaar.util.supporter.Supporters;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -34,8 +34,8 @@ public class Mortaar {
     /**
      * Creates resource location in the mod namespace with the given path.
      */
-    public static ResourceLocation resource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+    public static Identifier resource(String path) {
+        return Identifier.fromNamespaceAndPath(ID, path);
     }
 
     public static class ArgumentTypes {

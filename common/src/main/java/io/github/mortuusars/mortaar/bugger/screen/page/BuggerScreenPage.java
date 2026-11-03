@@ -1,6 +1,6 @@
 package io.github.mortuusars.mortaar.bugger.screen.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +28,7 @@ public interface BuggerScreenPage {
 
     }
 
-    default void render(GuiGraphics guiGraphics, float partialTicks, float scale) {
+    default void render(GuiGraphicsExtractor guiGraphics, float partialTicks, float scale) {
 
     }
 

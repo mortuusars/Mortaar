@@ -1,8 +1,5 @@
 package io.github.mortuusars.mortaar.neoforge;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,8 +7,8 @@ import net.minecraft.world.MenuProvider;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,11 +18,11 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class PlatformImpl {
     public static boolean isInDevEnv() {
-        return !FMLEnvironment.production;
+        return !FMLEnvironment.isProduction();
     }
 
     public static boolean isClient() {
-        return FMLEnvironment.dist == Dist.CLIENT;
+        return FMLEnvironment.getDist() == Dist.CLIENT;
     }
 
     public static boolean isModLoaded(String modId) {
@@ -33,7 +30,7 @@ public class PlatformImpl {
     }
 
     public static boolean isModLoading(String modId) {
-        return LoadingModList.get().getModFileById(modId) != null;
+        return FMLLoader.getCurrent().getLoadingModList().getModFileById(modId) != null;
     }
 
     public static Path getGameDirectory() {

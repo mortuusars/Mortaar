@@ -34,7 +34,7 @@ public class Packets {
     }
 
     public static void sendToOtherClients(Packet packet, @NotNull ServerPlayer except) {
-        except.server.getPlayerList().getPlayers().forEach(player -> {
+        except.level().getServer().getPlayerList().getPlayers().forEach(player -> {
             if (!player.equals(except)) {
                 sendToClient(packet, player);
             }

@@ -17,11 +17,11 @@ public class TextUtil {
 
         FormattedText truncatedText = font.substrByWidth(text, width - ellipsisWidth);
 
-        Style style = splitter.componentStyleAtWidth(text, width - ellipsisWidth);
-        if (style == null) {
-            style = Style.EMPTY;
-        }
+//        Style style = splitter.componentStyleAtWidth(text, width - ellipsisWidth);
+////        if (style == null) {
+////            style = Style.EMPTY;
+////        }
 
-        return FormattedText.composite(truncatedText, Component.literal("...").setStyle(style));
+        return FormattedText.composite(truncatedText, Component.literal("...")/*.setStyle(style)*/);
     }
 }

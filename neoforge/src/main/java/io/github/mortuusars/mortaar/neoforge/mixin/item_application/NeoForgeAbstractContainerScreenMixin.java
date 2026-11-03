@@ -7,7 +7,7 @@ import io.github.mortuusars.mortaar.client.Minecrft;
 import io.github.mortuusars.mortaar.world.item.ApplicationTargetItem;
 import io.github.mortuusars.mortaar.world.item.ApplicatorItem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -27,11 +27,14 @@ public abstract class NeoForgeAbstractContainerScreenMixin<T extends AbstractCon
     @Shadow
     public abstract T getMenu();
 
+    //TOOD: save as fabric. try moving into GuiGraphics
+
+    @SuppressWarnings("LocalMayUseName")
     @WrapOperation(method = "renderSlotContents", at= @At(value = "INVOKE",
-          target = "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void onRenderItemDecorations(GuiGraphics instance, Font font, ItemStack stack, int x, int y,
-                                         String text, Operation<Void> original, @Local(argsOnly = true) Slot slot) {
-        original.call(instance, font, stack, x, y, text);
+          target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;itemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
+    private void onRenderItemDecorations(GuiGraphicsExtractor instance, Font font, ItemStack itemStack, int x, int y,
+                                         String countText, Operation<Void> original, @Local(argsOnly = true) Slot slot) {
+        original.call(instance, font, itemStack, x, y, countText);
 
         ItemStack carried = getMenu().getCarried();
         if (carried.isEmpty()) {
@@ -51,10 +54,9 @@ public abstract class NeoForgeAbstractContainerScreenMixin<T extends AbstractCon
         }
 
         if (shouldDraw) {
-            instance.pose().pushPose();
-            instance.pose().translate(0.0F, 0.0F, 200.0F);
-            instance.drawString(font, "+", x + 19 - 2 - font.width("+"), y - 1, 0xFFFFD74E, true);
-            instance.pose().popPose();
+            instance.pose().pushMatrix();
+            instance.text(font, "+", x + 19 - 2 - font.width("+"), y - 1, 0xFFFFD74E, true);
+            instance.pose().popMatrix();
         }
     }
 }

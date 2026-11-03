@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.mortuusars.mortaar.client.Minecrft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,7 +24,7 @@ public class BuggerEntityOverhead {
         DATA.add(data);
     }
 
-    public static <T extends Entity> void onRenderEntity(EntityRenderDispatcher dispatcher, T entity, float partialTick,
+    /*public static <T extends Entity> void onRenderEntity(EntityRenderDispatcher dispatcher, T entity, float partialTick,
                                                          PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         if (!BuggerScreen.active()) return;
         if (dispatcher.distanceToSqr(entity) > 4096.0) return;
@@ -55,9 +54,9 @@ public class BuggerEntityOverhead {
         }
 
         poseStack.popPose();
-    }
+    }*/
 
-    private static List<Component> getOverheadEntityInfoLines(Entity entity) {
+    public static List<Component> getOverheadEntityInfoLines(Entity entity) {
         LINES.clear();
         DATA.forEach(data -> data.addLines(entity, LINES));
         return LINES;

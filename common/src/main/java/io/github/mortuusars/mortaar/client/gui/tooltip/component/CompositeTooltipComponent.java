@@ -1,10 +1,9 @@
 package io.github.mortuusars.mortaar.client.gui.tooltip.component;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class CompositeTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public int getWidth(Font font) {
+    public int getWidth(@NonNull Font font) {
         int width = 0;
         for (ClientTooltipComponent component : components) {
             width = Math.max(component.getWidth(font), width);
@@ -25,27 +24,27 @@ public class CompositeTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight(@NonNull Font font) {
         int height = 0;
         for (ClientTooltipComponent component : components) {
-            height += component.getHeight();
+            height += component.getHeight(font);
         }
         return height;
     }
 
     @Override
-    public void renderImage(Font font, int x, int y, GuiGraphics guiGraphics) {
+    public void extractText(@NonNull GuiGraphicsExtractor graphics, @NonNull Font font, int x, int y) {
         for (ClientTooltipComponent component : components) {
-            component.renderImage(font, x, y, guiGraphics);
-            y += component.getHeight();
+            component.extractText(graphics, font, x, y);
+            y += component.getHeight(font);
         }
     }
 
     @Override
-    public void renderText(Font font, int mouseX, int mouseY, Matrix4f matrix, MultiBufferSource.BufferSource bufferSource) {
+    public void extractImage(@NonNull Font font, int x, int y, int w, int h, @NonNull GuiGraphicsExtractor graphics) {
         for (ClientTooltipComponent component : components) {
-            component.renderText(font, mouseX, mouseY, matrix, bufferSource);
-            mouseY += component.getHeight();
+            component.extractImage(font, x, y, w, h, graphics);
+            y += component.getHeight(font);
         }
     }
 }

@@ -2,8 +2,8 @@ package io.github.mortuusars.mortaar.util.supporter;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.util.Util;
 
 import java.util.List;
 import java.util.UUID;

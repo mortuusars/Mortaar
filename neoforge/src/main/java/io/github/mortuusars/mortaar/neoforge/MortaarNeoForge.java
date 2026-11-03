@@ -13,9 +13,9 @@ public class MortaarNeoForge {
     public MortaarNeoForge(ModContainer container) {
         Mortaar.init();
 
-        container.registerConfig(ModConfig.Type.SERVER, Config.Server.SPEC);
+        container.registerConfig(ModConfig.Type.SYNCED, Config.Server.SPEC);
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             MortaarNeoForgeClient.init(container);
         }
     }

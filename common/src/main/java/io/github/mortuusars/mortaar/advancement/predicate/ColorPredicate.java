@@ -3,8 +3,8 @@ package io.github.mortuusars.mortaar.advancement.predicate;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.mortuusars.mortaar.util.color.Color;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.util.FastColor;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -30,10 +30,10 @@ public record ColorPredicate(Optional<Integer> exact,
 
     public boolean matches(int colorARGB) {
         return (exact.isEmpty() || exact.get() == colorARGB)
-              && (red.isEmpty() || red.get().matches(FastColor.ARGB32.red(colorARGB)))
-              && (green.isEmpty() || green.get().matches(FastColor.ARGB32.green(colorARGB)))
-              && (blue.isEmpty() || blue.get().matches(FastColor.ARGB32.blue(colorARGB)))
-              && (alpha.isEmpty() || alpha.get().matches(FastColor.ARGB32.alpha(colorARGB)))
+              && (red.isEmpty() || red.get().matches(ARGB.red(colorARGB)))
+              && (green.isEmpty() || green.get().matches(ARGB.green(colorARGB)))
+              && (blue.isEmpty() || blue.get().matches(ARGB.blue(colorARGB)))
+              && (alpha.isEmpty() || alpha.get().matches(ARGB.alpha(colorARGB)))
               && hsbMatches(colorARGB);
     }
 

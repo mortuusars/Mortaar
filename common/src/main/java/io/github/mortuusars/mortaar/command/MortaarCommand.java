@@ -10,11 +10,13 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.Permissions;
 
 public class MortaarCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         dispatcher.register(Commands.literal("mortaar")
-              .requires((stack) -> stack.hasPermission(3))
+              .requires((stack) -> stack.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
               .then(Commands.literal("debug")
                     .executes(MortaarCommand::toggleDebugMode)
                     .then(Commands.literal("tests")

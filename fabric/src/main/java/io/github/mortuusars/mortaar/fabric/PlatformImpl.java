@@ -2,12 +2,9 @@ package io.github.mortuusars.mortaar.fabric;
 
 import io.netty.buffer.ByteBufUtil;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -67,10 +64,10 @@ public class PlatformImpl {
      */
     private static class HiddenFromScaryClassLoader {
         public static void openMenu(ServerPlayer serverPlayer, MenuProvider menuProvider, Consumer<RegistryFriendlyByteBuf> extraDataWriter) {
-            ExtendedScreenHandlerFactory<byte[]> extendedScreenHandlerFactory = new ExtendedScreenHandlerFactory<>() {
+            ExtendedMenuProvider<byte[]> extendedScreenHandlerFactory = new ExtendedMenuProvider<>() {
                 @Override
                 public byte[] getScreenOpeningData(ServerPlayer player) {
-                    RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(PacketByteBufs.create(), player.registryAccess());
+                    RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(FriendlyByteBufs.create(), player.registryAccess());
                     extraDataWriter.accept(buffer);
                     byte[] bytes = ByteBufUtil.getBytes(buffer);
                     buffer.release();

@@ -3,8 +3,7 @@ package io.github.mortuusars.mortaar.neoforge;
 import com.mojang.brigadier.arguments.ArgumentType;
 import io.github.mortuusars.mortaar.Mortaar;
 import io.github.mortuusars.mortaar.Registrar;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.component.DataComponentType;
@@ -13,7 +12,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.world.entity.Entity;
@@ -32,8 +31,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -59,13 +56,11 @@ public class RegistrarNeoForge implements Registrar {
     public final DeferredRegister<RecipeType<?>> RECIPE_TYPES;
     public final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS;
     public final DeferredRegister<CriterionTrigger<?>> CRITERION_TRIGGERS;
-    public final DeferredRegister<ItemSubPredicate.Type<?>> ITEM_SUB_PREDICATES;
     public final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENT_TYPES;
-    public final DeferredRegister<Feature<?>> WORLD_GEN_FEATURES;
     public final DeferredRegister.DataComponents DATA_COMPONENT_TYPES;
     public final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
-    public final DeferredRegister<ResourceLocation> CUSTOM_STATS;
-    public final Map<ResourceLocation, StatFormatter> STATS = new HashMap<>();
+    public final DeferredRegister<Identifier> CUSTOM_STATS;
+    public final Map<Identifier, StatFormatter> STATS = new HashMap<>();
 
     public RegistrarNeoForge(String modId) {
         this.modId = modId;
@@ -81,17 +76,13 @@ public class RegistrarNeoForge implements Registrar {
         RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, modId);
         RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, modId);
         CRITERION_TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, modId);
-        ITEM_SUB_PREDICATES = DeferredRegister.create(Registries.ITEM_SUB_PREDICATE_TYPE, modId);
         COMMAND_ARGUMENT_TYPES = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, modId);
-        WORLD_GEN_FEATURES = DeferredRegister.create(Registries.FEATURE, modId);
         DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, modId);
         PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, modId);
         CUSTOM_STATS = DeferredRegister.create(Registries.CUSTOM_STAT, modId);
 
         ModList.get().getModContainerById(modId).ifPresentOrElse(
-              modContainer -> {
-                  register(modContainer.getEventBus());
-              },
+              modContainer -> register(modContainer.getEventBus()),
               () -> Mortaar.LOGGER.error("Cannot register values from a registrar: ModContainer of '{}' is not found.", modId)
         );
     }
@@ -113,10 +104,8 @@ public class RegistrarNeoForge implements Registrar {
         RECIPE_TYPES.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
         CRITERION_TRIGGERS.register(modEventBus);
-        ITEM_SUB_PREDICATES.register(modEventBus);
         SOUND_EVENTS.register(modEventBus);
         COMMAND_ARGUMENT_TYPES.register(modEventBus);
-        WORLD_GEN_FEATURES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
         PARTICLE_TYPES.register(modEventBus);
         CUSTOM_STATS.register(modEventBus);
@@ -136,12 +125,12 @@ public class RegistrarNeoForge implements Registrar {
 
     @Override
     public Supplier<PoiType> poiType(ResourceKey<PoiType> key, int ticketCount, int searchDistance, Supplier<Set<BlockState>> states) {
-        return POI_TYPES.register(key.location().getPath(), () -> new PoiType(states.get(), ticketCount, searchDistance));
+        return POI_TYPES.register(key.identifier().getPath(), () -> new PoiType(states.get(), ticketCount, searchDistance));
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityType<T> newBlockEntityType(BlockEntitySupplier<T> blockEntitySupplier, Block... validBlocks) {
-        return BlockEntityType.Builder.of(blockEntitySupplier::create, validBlocks).build(null);
+        return new BlockEntityType<>(blockEntitySupplier::create, validBlocks);
     }
 
     @Override
@@ -162,7 +151,7 @@ public class RegistrarNeoForge implements Registrar {
               .clientTrackingRange(clientTrackingRange)
               .setShouldReceiveVelocityUpdates(velocityUpdates)
               .updateInterval(updateInterval)
-              .build(id));
+              .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(modId, id))));
     }
 
     @Override
@@ -171,7 +160,7 @@ public class RegistrarNeoForge implements Registrar {
             EntityType.Builder<T> builder = EntityType.Builder.of(factory, category);
             builder.setShouldReceiveVelocityUpdates(receiveVelocityUpdates);
             typeBuilder.accept(builder);
-            return builder.build(id);
+            return builder.build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(modId, id)));
         });
     }
 
@@ -206,20 +195,10 @@ public class RegistrarNeoForge implements Registrar {
     }
 
     @Override
-    public <T extends ItemSubPredicate.Type<?>> Supplier<T> itemSubPredicate(String name, Supplier<T> supplier) {
-        return ITEM_SUB_PREDICATES.register(name, supplier);
-    }
-
-    @Override
     public <A extends ArgumentType<?>, T extends ArgumentTypeInfo.Template<A>, I extends ArgumentTypeInfo<A, T>>
     Supplier<ArgumentTypeInfo<A, T>> commandArgumentType(String id, Class<A> infoClass, I argumentTypeInfo) {
         return COMMAND_ARGUMENT_TYPES.register(id,
               () -> ArgumentTypeInfos.registerByClass(infoClass, argumentTypeInfo));
-    }
-
-    @Override
-    public <T extends FeatureConfiguration> Supplier<Feature<?>> worldGenFeature(String name, Supplier<Feature<T>> featureSupplier) {
-        return WORLD_GEN_FEATURES.register(name, featureSupplier);
     }
 
     @Override
@@ -237,7 +216,7 @@ public class RegistrarNeoForge implements Registrar {
     }
 
     @Override
-    public Supplier<ResourceLocation> stat(ResourceLocation location, StatFormatter formatter) {
+    public Supplier<Identifier> stat(Identifier location, StatFormatter formatter) {
         STATS.put(location, formatter);
         return CUSTOM_STATS.register(location.getPath(), () -> location);
     }

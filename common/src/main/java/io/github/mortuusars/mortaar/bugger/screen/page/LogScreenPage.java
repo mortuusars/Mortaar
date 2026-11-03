@@ -1,10 +1,10 @@
 package io.github.mortuusars.mortaar.bugger.screen.page;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
+import io.github.mortuusars.mortaar.client.Minecrft;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -108,8 +108,8 @@ public class LogScreenPage implements BuggerScreenPage {
 
     @Override
     public boolean onKeyPress(int key, int scanCode, int modifiers) {
-        if (key == InputConstants.KEY_O && Screen.hasControlDown()) {
-            Util.getPlatform().openFile(logFile.toFile());
+        if (key == InputConstants.KEY_O && Minecrft.get().hasControlDown()) {
+            Blaze3D.openPath(logFile.toAbsolutePath());
             return true;
         }
         return false;
@@ -219,7 +219,7 @@ public class LogScreenPage implements BuggerScreenPage {
         private void openForTail() throws IOException {
             if (!Files.exists(logPath)) return;
             raf = new RandomAccessFile(logPath.toFile(), "r");
-            // choose behaviour: 0 -> read entire file at start; raf.length() -> start only new lines
+            // choose behavior: 0 -> read entire file at start; raf.length() -> start only new lines
             lastKnownLength = raf.length(); // skip existing lines by default
             raf.seek(lastKnownLength);
         }
