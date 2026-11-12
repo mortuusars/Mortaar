@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.8
+- Result
+
 ## 1.7.7
 - Mortaar's Better Minecrft
 
